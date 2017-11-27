@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Vue</title>
+
+  <style href="css/styles.css" rel="stylesheet"></style>
+</head>
+<body>
+  <div id="app">
+    <catalog-header v-bind:total="total"></catalog-header>
+
+    <catalog-item 
+      v-for="item in catalogItemsList" 
+      v-bind:catalog-items="item" 
+      v-bind:key="item.id"
+      v-on:count-it="countTotalProducts"
+    >
+    </catalog-item>
+  </div>
+
+  <script src="https://unpkg.com/vue"></script>
+  <script src="js/catalog.js"></script>
+</body>
+</html>
