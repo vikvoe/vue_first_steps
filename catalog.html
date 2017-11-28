@@ -10,7 +10,9 @@
 </head>
 <body>
   <div id="app">
-    <catalog-header v-bind:total="total"></catalog-header>
+    <catalog-header 
+      v-bind:product-name="productName"
+    ></catalog-header>
 
     <catalog-item 
       v-for="item in catalogItemsList" 

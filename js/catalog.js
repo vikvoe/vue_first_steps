@@ -8,13 +8,13 @@ Vue.component('catalogItem', {
   ',
   methods: {
     countThisProduct: function () {
-      this.$emit('to-basket', this.$vnode.data.key)
+      this.$emit('to-basket', this.catalogItems.id)
     }
   }
 })
 
 Vue.component('catalogHeader', {
-  props: ['total'],
+  props: ['productName'],
   data: function() {
     return {
       basket: []
@@ -22,13 +22,16 @@ Vue.component('catalogHeader', {
   },
   template:
   '\
-    <p>\
-      {{ total }}\
+    <p> Корзина \
+      {{ productName }} <span v-on:click="removeFromBasket">Удалить</span>\
     </p>\
   ',
   methods: {
     addProductToBasket: function() {
-      console.log(total)
+      console.log()
+    },
+    removeFromBasket: function() {
+      console.log('-')
     }
   }
 })
@@ -42,7 +45,17 @@ var app = new Vue({
       { id: 1, text: 'Товар 2' },
       { id: 2, text: 'Товар 3' }
     ],
-    total: 0
+    total: -1
+  },
+  computed: {
+    productName: function() {
+      // TODO разобрать условие
+      if(this.total >= 0) {
+        return this.catalogItemsList[this.total].text
+      } else {
+        return 'Пустая';
+      }
+    }
   },
   methods: {
     moveToBasket: function (value) {
