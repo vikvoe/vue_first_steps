@@ -16,7 +16,7 @@
       v-for="item in catalogItemsList" 
       v-bind:catalog-items="item" 
       v-bind:key="item.id"
-      v-on:count-it="countTotalProducts"
+      v-on:to-basket="moveToBasket"
     >
     </catalog-item>
   </div>

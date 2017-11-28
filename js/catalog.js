@@ -8,23 +8,31 @@ Vue.component('catalogItem', {
   ',
   methods: {
     countThisProduct: function () {
-      this.$emit('count-it')
+      this.$emit('to-basket', this.$vnode.data.key)
     }
-  },
+  }
 })
 
 Vue.component('catalogHeader', {
   props: ['total'],
+  data: function() {
+    return {
+      basket: []
+    }
+  },
   template:
   '\
     <p>\
-      В корзине \
-      <span>\
-        {{ total }}\
-      </span>\
+      {{ total }}\
     </p>\
-  '
+  ',
+  methods: {
+    addProductToBasket: function() {
+      console.log(total)
+    }
+  }
 })
+
 
 var app = new Vue({
   el:'#app',
@@ -37,8 +45,8 @@ var app = new Vue({
     total: 0
   },
   methods: {
-    countTotalProducts: function () {
-      this.total += 1
+    moveToBasket: function (value) {
+      this.total = value;
     }
   }
 })
