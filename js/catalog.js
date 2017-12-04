@@ -26,55 +26,51 @@ Vue.component('catalogHeader', {
   props: ['productName'],
   template:
   '\
-    <p> В корзине \
-      {{ productName }}\
-    </p>\
+    <div> {{ productName }}\
+    </div>\
   '
 })
 var app = new Vue({
   el:'#app',
   data: {
-    catalogItemsList: [
-      { id: 0, text: 'Товар А: ' },
-      { id: 1, text: 'Товар Б: ' },
-      { id: 2, text: 'Товар В: ' }
-    ],
+    catalogItemsList: {
+      1: { id: 0, text: 'Товар А: ' },
+      2: { id: 1, text: 'Товар Б: ' },
+      3: { id: 2, text: 'Товар В: ' }
+    },
     basket: {
 
-    }
+    },
   },
+  // выводить в корзину наименование товара и его количество
+  // vue cli
   computed: {
     productName: function() {
-      // написать forEach 
-      let amount = 0;
-      let isEmptyObject = function (obj) { return Object.keys(obj).length === 0; };      
-      console.log('gr')
-      return this.basket;
-      console.log()
-      for (var key in this.basket) {
-        console.log( " значение: " + this.basket[key] );
-        amount += this.basket[key]
-      }
-      console.log('amount '+ amount)
-
-      if(amount > 0) {
-        return amount;
-      } else {
-        return "пусто";
-      }
+      // let sum = 0;
+      // for (var key in this.basket) {
+      //   sum += this.basket[key];
+      // }
+      // return sum;
+      return this.basket[id];
     }
   },
   methods: {
     addItemToBasket: function(id) {
       if(!this.basket[id]) {
-        this.basket[id] = 1;
+        this.$set(this.basket, id, 1)
       } else {
-        this.basket[id] += 1;
+        // является ли дорогостоящей операцией?
+        this.$set(this.basket, id, this.basket[id] + 1);
       }
     },
     deleteItemFromBasket: function(id) {
-      if(this.basket[id] === 0) return;
-      this.basket[id] -= 1
+      if(this.basket[id] === 1) {
+        // является ли дорогостоящей операцией?
+        this.basket[id] -= 1;
+        this.$delete(this.basket, id)
+        return;
+      }
+      this.basket[id] -= 1;
     }
   }
 })
