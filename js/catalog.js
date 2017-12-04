@@ -2,11 +2,10 @@ Vue.component('catalogItem', {
   props: ['catalogItems'],
   template:
   '\
-    <li v-on:click="countThisProduct">\
+    <li>\
       {{catalogItems.text}} \
-      {{amount}} шт. \
-      <span class="js-add">Добавить</span>\
-      <span v-if="amount > 0" class="js-remove">Удалить</span>\
+      <button v-on:click="addItem">Добавить</button>\
+      <button v-on:click="deleteItem">Удалить</button>\
     </li>\
   ',
   data: function() {
@@ -15,17 +14,14 @@ Vue.component('catalogItem', {
     }
   }, 
   methods: {
-    countThisProduct: function (e) {
-      if(e.target.className === 'js-remove' && this.amount > 0) {
-        this.amount -= 1
-      } else if(e.target.className === 'js-add') {
-        this.amount += 1
-      }
-      this.$emit('to-basket', this.catalogItems.id, e.target.className)
+    addItem: function() {
+      this.$emit('add-item', this.catalogItems.id)
+    },
+    deleteItem: function() {
+      this.$emit('delete-item', this.catalogItems.id)
     }
   }
 })
-
 Vue.component('catalogHeader', {
   props: ['productName'],
   template:
@@ -35,8 +31,6 @@ Vue.component('catalogHeader', {
     </p>\
   '
 })
-
-
 var app = new Vue({
   el:'#app',
   data: {
@@ -45,25 +39,42 @@ var app = new Vue({
       { id: 1, text: 'Товар Б: ' },
       { id: 2, text: 'Товар В: ' }
     ],
-    totalAmount: 0
+    basket: {
+
+    }
   },
   computed: {
     productName: function() {
-      // TODO разобрать условие
-      if(this.totalAmount > 0) {
-        return this.totalAmount + ' шт.'
+      // написать forEach 
+      let amount = 0;
+      let isEmptyObject = function (obj) { return Object.keys(obj).length === 0; };      
+      console.log('gr')
+      return this.basket;
+      console.log()
+      for (var key in this.basket) {
+        console.log( " значение: " + this.basket[key] );
+        amount += this.basket[key]
+      }
+      console.log('amount '+ amount)
+
+      if(amount > 0) {
+        return amount;
       } else {
-        return 'пусто';
+        return "пусто";
       }
     }
   },
   methods: {
-    moveToBasket: function (value, eventName) {
-      if(eventName === 'js-remove' && this.totalAmount > 0) {
-        this.totalAmount -= 1
-      } else if(eventName === 'js-add') {
-        this.totalAmount += 1
+    addItemToBasket: function(id) {
+      if(!this.basket[id]) {
+        this.basket[id] = 1;
+      } else {
+        this.basket[id] += 1;
       }
+    },
+    deleteItemFromBasket: function(id) {
+      if(this.basket[id] === 0) return;
+      this.basket[id] -= 1
     }
   }
 })

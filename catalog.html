@@ -18,7 +18,8 @@
       v-for="item in catalogItemsList" 
       v-bind:catalog-items="item" 
       v-bind:key="item.id"
-      v-on:to-basket="moveToBasket"
+      v-on:add-item="addItemToBasket"
+      v-on:delete-item="deleteItemFromBasket"
     >
     </catalog-item>
   </div>
