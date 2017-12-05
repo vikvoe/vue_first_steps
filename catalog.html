@@ -11,8 +11,8 @@
 <body>
   <div id="app">
     <catalog-header 
-      v-bind:product-name="productName"
-      v-for="item in basket"
+      v-for="item in basket" 
+      v-bind:basket-items="item" 
       v-bind:key="item.id"
     ></catalog-header>
 

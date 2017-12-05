@@ -7,26 +7,21 @@ Vue.component('catalogItem', {
       <button v-on:click="addItem">Добавить</button>\
       <button v-on:click="deleteItem">Удалить</button>\
     </li>\
-  ',
-  data: function() {
-    return {
-      amount: 0
-    }
-  }, 
+  ', 
   methods: {
     addItem: function() {
-      this.$emit('add-item', this.catalogItems.id)
+      this.$emit('add-item', this.catalogItems)
     },
     deleteItem: function() {
-      this.$emit('delete-item', this.catalogItems.id)
+      this.$emit('delete-item', this.catalogItems)
     }
   }
 })
 Vue.component('catalogHeader', {
-  props: ['productName'],
+  props: ['products'],
   template:
   '\
-    <div> {{ productName }}\
+    <div> {{ basketItems.text }} {{ basketItems.amount }}\
     </div>\
   '
 })
@@ -42,35 +37,22 @@ var app = new Vue({
 
     },
   },
-  // выводить в корзину наименование товара и его количество
-  // vue cli
-  computed: {
-    productName: function() {
-      // let sum = 0;
-      // for (var key in this.basket) {
-      //   sum += this.basket[key];
-      // }
-      // return sum;
-      return this.basket[id];
-    }
-  },
+
   methods: {
-    addItemToBasket: function(id) {
-      if(!this.basket[id]) {
-        this.$set(this.basket, id, 1)
+    addItemToBasket: function(item) {
+      if(!this.basket[item.id]) {
+        this.$set(this.basket, item.id, { "amount": 1, "text": item.text});
       } else {
-        // является ли дорогостоящей операцией?
-        this.$set(this.basket, id, this.basket[id] + 1);
+        this.basket[item.id].amount += 1
       }
     },
-    deleteItemFromBasket: function(id) {
-      if(this.basket[id] === 1) {
-        // является ли дорогостоящей операцией?
-        this.basket[id] -= 1;
-        this.$delete(this.basket, id)
+    deleteItemFromBasket: function(item) {
+      if(this.basket[item.id].amount === 1) {
+        this.basket[item.id].amount -= 1;
+        this.$delete(this.basket, item.id)
         return;
       }
-      this.basket[id] -= 1;
+      this.basket[item.id].amount -= 1;
     }
   }
 })
