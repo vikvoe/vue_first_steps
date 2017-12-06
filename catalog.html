@@ -11,15 +11,14 @@
 <body>
   <div id="app">
     <catalog-header 
-      v-for="item in basket" 
-      v-bind:basket-items="item" 
-      v-bind:key="item.id"
+      v-bind:get-product-from-basket="getProductFromBasket"
     ></catalog-header>
 
     <catalog-item 
-      v-for="item in catalogItemsList" 
-      v-bind:catalog-items="item" 
-      v-bind:key="item.id"
+      v-for="(value, key, index) in catalogItemsList" 
+      v-bind:product-id="key" 
+      v-bind:product-value="value" 
+      v-bind:key="key" 
       v-on:add-item="addItemToBasket"
       v-on:delete-item="deleteItemFromBasket"
     >

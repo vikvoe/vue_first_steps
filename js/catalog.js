@@ -1,27 +1,38 @@
+// добавить в catalogList url, pic, desc
+// сменить id на невразумительные )
+// читать router
+// перенести
+// при клике на товар переходим на страничку товара, но корзина на месте
 Vue.component('catalogItem', {
-  props: ['catalogItems'],
+  props: ['productId', 'productValue'],
   template:
   '\
     <li>\
-      {{catalogItems.text}} \
+      {{productValue.text}} \
       <button v-on:click="addItem">Добавить</button>\
       <button v-on:click="deleteItem">Удалить</button>\
     </li>\
   ', 
   methods: {
     addItem: function() {
-      this.$emit('add-item', this.catalogItems)
+      this.$emit('add-item', this.productId)
     },
     deleteItem: function() {
-      this.$emit('delete-item', this.catalogItems)
+      this.$emit('delete-item', this.productId)
     }
   }
 })
 Vue.component('catalogHeader', {
-  props: ['products'],
+  props: ['getProductFromBasket'],
   template:
   '\
-    <div> {{ basketItems.text }} {{ basketItems.amount }}\
+    <div>\
+      <div \
+        v-for="item in getProductFromBasket" \
+        v-bind:key="item.key" \
+      > \
+        {{ item.product }} {{ item.amount }} \
+      </div>\
     </div>\
   '
 })
@@ -29,30 +40,44 @@ var app = new Vue({
   el:'#app',
   data: {
     catalogItemsList: {
-      1: { id: 0, text: 'Товар А: ' },
-      2: { id: 1, text: 'Товар Б: ' },
-      3: { id: 2, text: 'Товар В: ' }
+      1: { text: 'Товар А: ' },
+      2: { text: 'Товар Б: ' },
+      3: { text: 'Товар В: ' }
     },
     basket: {
 
     },
   },
-
+  computed: {
+    getProductFromBasket: function() {
+      var result = [];
+      for (key in this.basket) {
+        result.push(
+          {
+            key: key,
+            product: this.catalogItemsList[key].text,
+            amount: this.basket[key].amount
+          }          
+        )
+      }
+      return result;
+    }
+  },
   methods: {
-    addItemToBasket: function(item) {
-      if(!this.basket[item.id]) {
-        this.$set(this.basket, item.id, { "amount": 1, "text": item.text});
+    addItemToBasket: function(key) {
+      if(!this.basket[key]) {
+        this.$set(this.basket, key, { "amount": 1 });
       } else {
-        this.basket[item.id].amount += 1
+        this.basket[key].amount += 1
       }
     },
-    deleteItemFromBasket: function(item) {
-      if(this.basket[item.id].amount === 1) {
-        this.basket[item.id].amount -= 1;
-        this.$delete(this.basket, item.id)
+    deleteItemFromBasket: function(key) {
+      if(this.basket[key].amount === 1) {
+        this.basket[key].amount -= 1;
+        this.$delete(this.basket, key)
         return;
       }
-      this.basket[item.id].amount -= 1;
+      this.basket[key].amount -= 1;
     }
   }
 })
